@@ -15,18 +15,18 @@ public class Shooter : MonoBehaviour, IShooter
         _firePoint = firePoint;
     }
 
-    public void Shooting(Vector2 direction)
+    public void Shooting(Vector2 direction, BulletOwner owner)
     {
         var bullet = _bulletPool.Get();
         bullet.transform.position = _firePoint.position;
-        bullet.Launch(direction);
+        bullet.Launch(direction,  owner);
     }
 
-    public void StartAutoShooting(Vector2 direction)
+    public void StartAutoShooting(Vector2 direction, BulletOwner owner)
     {
         if (_autoShooting == null)
         {
-            _autoShooting = StartCoroutine(AutoShoot(direction));
+            _autoShooting = StartCoroutine(AutoShoot(direction, owner));
         }
     }
 
@@ -40,13 +40,13 @@ public class Shooter : MonoBehaviour, IShooter
         }
     }
 
-    private IEnumerator AutoShoot(Vector2 direction)
+    private IEnumerator AutoShoot(Vector2 direction, BulletOwner owner)
     {
         var wait = new WaitForSeconds(_fireRate);
 
         while (true)
         {
-            Shooting(direction);
+            Shooting(direction, owner);
             yield return wait;
         }
     }

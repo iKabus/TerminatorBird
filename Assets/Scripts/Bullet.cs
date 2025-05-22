@@ -9,16 +9,19 @@ public class Bullet : MonoBehaviour, IInteractable, IPoolable
     private Vector2 _direction;
     private ObjectPool<Bullet> _bullets;
     private Coroutine _despawnCoroutine;
+    
+    public BulletOwner Owner { get; private set; }
 
-    public void Launch(Vector2 direction)
+    public void Launch(Vector2 direction,  BulletOwner owner)
     {
         _direction = direction;
+        Owner = owner;
         StartDespawnTimer();
     }
 
     private void Update()
     {
-        transform.Translate(_direction * _speed * Time.deltaTime);
+        transform.Translate(_direction * (_speed * Time.deltaTime));
     }
 
     public void Despawn()
@@ -40,7 +43,10 @@ public class Bullet : MonoBehaviour, IInteractable, IPoolable
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        _bullets?.ReturnToPool(this);
+        if (Owner == BulletOwner.Enemy == false)
+        {
+            _bullets?.ReturnToPool(this);
+        }
     }
 
     private void StartDespawnTimer()

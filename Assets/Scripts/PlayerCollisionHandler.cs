@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 
-[RequireComponent (typeof(Player))]
 public class PlayerCollisionHandler : MonoBehaviour
 {
     public event Action<IInteractable> CollisionDetected;

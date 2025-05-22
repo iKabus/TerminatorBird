@@ -4,7 +4,6 @@ using UnityEngine;
 [RequireComponent (typeof(InputReader))]
 [RequireComponent (typeof(PlayerMover))]
 [RequireComponent (typeof(PlayerCollisionHandler))]
-[RequireComponent (typeof(ScoreCounter))]
 [RequireComponent(typeof(Shooter))]
 public class Player : MonoBehaviour
 {
@@ -15,7 +14,6 @@ public class Player : MonoBehaviour
     private InputReader _inputReader;
     private PlayerMover _playerMover;
     private PlayerCollisionHandler _handler;
-    private ScoreCounter _scoreCounter;
     private IShooter _shooter;
 
     private ObjectPool<Bullet> _bulletPool;
@@ -27,7 +25,6 @@ public class Player : MonoBehaviour
         _inputReader = GetComponent<InputReader>();
         _playerMover = GetComponent<PlayerMover>(); 
         _handler = GetComponent<PlayerCollisionHandler>();
-        _scoreCounter = GetComponent<ScoreCounter>();
         _shooter = GetComponent<Shooter>();
 
         _bulletPool = new ObjectPool<Bullet>(_bulletPrefab, _bulletPoolSize);
@@ -51,7 +48,6 @@ public class Player : MonoBehaviour
 
     public void Reset()
     {
-        _scoreCounter.Reset();
         _playerMover.Reset();
     }
 
@@ -62,21 +58,14 @@ public class Player : MonoBehaviour
 
     private void ProcessCollision(IInteractable interactable)
     {
-        if (interactable is Bullet || interactable is Ground)
+        if (interactable is Bullet || interactable is GameZone)
         {
-            Debug.Log("Ground!");
-
             GameOver?.Invoke();
         }
-
-        //else if (interactable is ScoreZone)
-        //{
-        //    _scoreCounter.Add();
-        //}
     }
 
     private void Shoot()
     {
-        _shooter?.Shooting(Vector2.right);
+        _shooter?.Shooting(Vector2.right, BulletOwner.Player);
     }
 }
