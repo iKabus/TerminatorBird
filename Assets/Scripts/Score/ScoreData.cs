@@ -10,14 +10,14 @@ public class ScoreData : ScriptableObject
     
     public int Score => _score;
 
-    public void ResetScore()
+    public void Reset()
     {
         _score = 0;
         
         ScoreChanged?.Invoke(_score);
     }
 
-    public void AddScore(int value)
+    public void Add(int value)
     {
         _score += value;
         

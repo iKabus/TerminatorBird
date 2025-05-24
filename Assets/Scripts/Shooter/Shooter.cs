@@ -11,6 +11,8 @@ public class Shooter : MonoBehaviour, IShooter
 
     public void Init(ObjectPool<Bullet> bulletPool, Transform firePoint)
     {
+        StopAutoShooting();
+        
         _bulletPool = bulletPool;
         _firePoint = firePoint;
     }

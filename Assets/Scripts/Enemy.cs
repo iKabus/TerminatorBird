@@ -63,7 +63,7 @@ public class Enemy : MonoBehaviour, IPoolable
                 
                 _enemies.ReturnToPool(this);
                 
-                _score.AddScore(1);
+                _score.Add(1);
             }
         }
     }
