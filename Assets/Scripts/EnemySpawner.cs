@@ -23,12 +23,20 @@ public class EnemySpawner : MonoBehaviour
 
         _spawning = StartCoroutine(SpawnEnemies());
     }
+    
+    private void OnDestroy()
+    {
+        if (_spawning != null)
+        {
+            StopCoroutine(_spawning);
+        }
+    }
 
     private IEnumerator SpawnEnemies()
     {
         var wait = new WaitForSeconds(_spawnInterval);
 
-        while (true)
+        while (enabled)
         {
             SpawnEnemy();
             yield return wait;
@@ -48,13 +56,5 @@ public class EnemySpawner : MonoBehaviour
         enemy.transform.position = spawnPoint;
 
         enemy.Spawn();
-    }
-
-    private void OnDestroy()
-    {
-        if (_spawning != null)
-        {
-            StopCoroutine(_spawning);
-        }
     }
 }

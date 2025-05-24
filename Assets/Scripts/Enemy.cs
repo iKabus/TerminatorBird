@@ -5,24 +5,16 @@ using UnityEngine;
 public class Enemy : MonoBehaviour, IPoolable
 {
     [SerializeField] private Transform _firePoint;
-    [SerializeField] private ScoreData _score;
 
     private IShooter _shooter;
-    private ObjectPool<Enemy> _enemies;
     private PlayerCollisionHandler _handler;
+    private IPool _pool;
 
     private void Awake()
     {
         _handler = GetComponent<PlayerCollisionHandler>();
     }
-
-    public void Init(ObjectPool<Bullet> bullets)
-    {
-        _shooter = GetComponent<Shooter>();
-        
-        _shooter.Init(bullets, _firePoint);
-    }
-
+    
     private void OnEnable()
     {
         _handler.CollisionDetected += ProcessCollision;
@@ -31,6 +23,13 @@ public class Enemy : MonoBehaviour, IPoolable
     private void OnDisable()
     {
         _handler.CollisionDetected -= ProcessCollision;
+    }
+    
+    public void Init(ObjectPool<Bullet> bullets)
+    {
+        _shooter = GetComponent<Shooter>();
+        
+        _shooter.Init(bullets, _firePoint);
     }
 
     public void Spawn()
@@ -43,16 +42,16 @@ public class Enemy : MonoBehaviour, IPoolable
         _shooter?.StopAutoShooting();
     }
 
-    public void SetPool<T>(ObjectPool<T> pool) where T : MonoBehaviour, IPoolable
+    public void SetPool(IPool pool)
     {
-        _enemies = pool as ObjectPool<Enemy>;
+        _pool = pool;
     }
     
     private void ProcessCollision(IInteractable interactable)
     {
         if (interactable is GameZone)
         {
-            _enemies.ReturnToPool(this);
+            _pool.ReturnToPool(this);
         }
 
         if (interactable is Bullet bullet)
@@ -61,9 +60,9 @@ public class Enemy : MonoBehaviour, IPoolable
             {
                 gameObject.SetActive(false);
                 
-                _enemies.ReturnToPool(this);
+                _pool?.ReturnToPool(this);
                 
-                _score.Add(1);
+                ScoreManager.Instance.Add(1);
             }
         }
     }

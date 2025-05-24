@@ -46,7 +46,7 @@ public class Shooter : MonoBehaviour, IShooter
     {
         var wait = new WaitForSeconds(_fireRate);
 
-        while (true)
+        while (enabled)
         {
             Shooting(direction, owner);
             yield return wait;

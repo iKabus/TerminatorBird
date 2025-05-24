@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -7,8 +8,25 @@ public class SceneSwitcher : MonoBehaviour
 {
     [SerializeField] private Scenes _scene;
     
+    private Button _button;
+    
     private void Awake()
     {
-        GetComponent<Button>().onClick.AddListener(() => SceneManager.LoadScene(_scene.ToString()));
+        _button = GetComponent<Button>();
+    }
+
+    private void OnEnable()
+    {
+        _button.onClick.AddListener(OnButtonClick);
+    }
+
+    private void OnDisable()
+    {
+        _button.onClick.RemoveListener(OnButtonClick);
+    }
+
+    private void OnButtonClick()
+    {
+        SceneManager.LoadScene(_scene.ToString());
     }
 }

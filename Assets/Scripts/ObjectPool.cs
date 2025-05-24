@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPool<T> where T : MonoBehaviour, IPoolable
+public class ObjectPool<T> : IPool where T : MonoBehaviour, IPoolable
 {
     private T _prefab;
     private Transform _parent;
@@ -24,14 +24,19 @@ public class ObjectPool<T> where T : MonoBehaviour, IPoolable
         
         obj.gameObject.SetActive(true);
         
+        obj.Spawn();
+        
         return obj;
     }
 
-    public void ReturnToPool(T obj)
+    public void ReturnToPool(MonoBehaviour obj)
     {
-        obj.Despawn();
-        obj.gameObject.SetActive(false);
-        _pool.Enqueue(obj);
+        if (obj is T poolable)
+        {
+            poolable.Despawn();
+            poolable.gameObject.SetActive(false);
+            _pool.Enqueue(poolable);
+        }
     }
 
     private T CreateNewObject()

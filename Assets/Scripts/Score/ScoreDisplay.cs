@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class ScoreDisplay : MonoBehaviour
 {
-    [SerializeField] private ScoreData _scoreData;
-    
     private TMP_Text _scoreText;
 
     private void Awake()
@@ -16,14 +14,14 @@ public class ScoreDisplay : MonoBehaviour
 
     private void OnEnable()
     {
-        _scoreData.ScoreChanged += UpdateScoreText;
+        ScoreManager.Instance.Changed += UpdateScoreText;
         
-        UpdateScoreText(_scoreData.Score);
+        UpdateScoreText(ScoreManager.Instance.Score);
     }
 
     private void OnDisable()
     {
-        _scoreData.ScoreChanged -= UpdateScoreText;
+        ScoreManager.Instance.Changed -= UpdateScoreText;
     }
 
     private void UpdateScoreText(int newScore)

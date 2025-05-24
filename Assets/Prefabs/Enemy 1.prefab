@@ -137,7 +137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _firePoint: {fileID: 1950014706442877759}
-  _score: {fileID: 11400000, guid: 17263ba9fb9888c49ba930dbb4c76c63, type: 2}
+  _score: {fileID: 0}
 --- !u!114 &8166596603518739112
 MonoBehaviour:
   m_ObjectHideFlags: 0

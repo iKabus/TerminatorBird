@@ -1,13 +1,29 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
 public class ScoreResetter : MonoBehaviour
 {
-    [SerializeField] private ScoreData _score;
+    private Button _button;
 
     private void Awake()
     {
-        GetComponent<Button>().onClick.AddListener(() => _score.Reset());
+        _button = GetComponent<Button>();
+    }
+
+    private void OnEnable()
+    {
+        _button.onClick.AddListener(OnButtonClick);
+    }
+
+    private void OnDisable()
+    {
+        _button.onClick.RemoveListener(OnButtonClick);
+    }
+
+    private void OnButtonClick()
+    {
+        ScoreManager.Instance.Reset();
     }
 }

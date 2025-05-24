@@ -7,21 +7,22 @@ public class Bullet : MonoBehaviour, IInteractable, IPoolable
     [SerializeField] private float _lifetime = 3f;
 
     private Vector2 _direction;
-    private ObjectPool<Bullet> _bullets;
     private Coroutine _despawnCoroutine;
+    private IPool _pool;
     
     public BulletOwner Owner { get; private set; }
-
-    public void Launch(Vector2 direction,  BulletOwner owner)
-    {
-        _direction = direction;
-        Owner = owner;
-        StartDespawnTimer();
-    }
-
+    
     private void Update()
     {
         transform.Translate(_direction * (_speed * Time.deltaTime));
+    }
+    
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (Owner != BulletOwner.Enemy)
+        {
+            _pool?.ReturnToPool(this);
+        }
     }
 
     public void Despawn()
@@ -34,19 +35,18 @@ public class Bullet : MonoBehaviour, IInteractable, IPoolable
         }
     }
 
-    public void SetPool<T>(ObjectPool<T> pool) where T : MonoBehaviour, IPoolable
+    public void SetPool(IPool pool)
     {
-        _bullets = pool as ObjectPool<Bullet>;
+        _pool = pool;
     }
 
     public void Spawn() { }
-
-    private void OnTriggerEnter2D(Collider2D collision)
+    
+    public void Launch(Vector2 direction,  BulletOwner owner)
     {
-        if (Owner == BulletOwner.Enemy == false)
-        {
-            _bullets?.ReturnToPool(this);
-        }
+        _direction = direction;
+        Owner = owner;
+        StartDespawnTimer();
     }
 
     private void StartDespawnTimer()
@@ -63,6 +63,6 @@ public class Bullet : MonoBehaviour, IInteractable, IPoolable
     {
         yield return new WaitForSeconds(_lifetime);
 
-        _bullets?.ReturnToPool(this);
+        _pool?.ReturnToPool(this);
     }
 }

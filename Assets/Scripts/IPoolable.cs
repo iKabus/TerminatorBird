@@ -2,7 +2,7 @@ using UnityEngine;
 
 public interface IPoolable
 {
+    public void SetPool(IPool pool);
     public void Spawn();
     public void Despawn();
-    public void SetPool<T>(ObjectPool<T> pool) where T: MonoBehaviour, IPoolable;
 }

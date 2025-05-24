@@ -42,7 +42,7 @@ public class PlayerMover : MonoBehaviour
 
         _chachedTransform.rotation = _maxRotation;
 
-        if (_coroutine == null == false)
+        if (_coroutine != null)
         {
             StopCoroutine(_coroutine);
         }
@@ -52,7 +52,7 @@ public class PlayerMover : MonoBehaviour
 
     public void Reset()
     {
-        if (_coroutine == null == false)
+        if (_coroutine != null)
         {
             StopCoroutine(_coroutine );
 
